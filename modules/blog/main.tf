@@ -17,16 +17,16 @@ data "aws_ami" "app_ami" {
 module "blog_vpc" {
   source = "terraform-aws-modules/vpc/aws"
 
-  name = var.enviornment.name
-  cidr = "${var.enviornment.network_prefix}.0.0/16"
+  name = var.environment.name
+  cidr = "${var.environment.network_prefix}.0.0/16"
   azs             = ["us-west-2a","us-west-2b","us-west-2c"]
-  public_subnets  = ["${var.enviornment.network_prefix}.101.0/24", "${var.enviornment.network_prefix}.102.0/24", "${var.enviornment.network_prefix}.103.0/24"]
+  public_subnets  = ["${var.environment.network_prefix}.101.0/24", "${var.environment.network_prefix}.102.0/24", "${var.environment.network_prefix}.103.0/24"]
 
   enable_nat_gateway = true
 
   tags = {
     Terraform = "true"
-    Environment = var.enviornment.name
+    Environment = var.environment.name
   }
 }
 
@@ -34,7 +34,7 @@ module "blog_autoscaling" {
   source  = "terraform-aws-modules/autoscaling/aws"
   version = "6.7.1"
   
-  name = "${var.enviornment.name}-blog"
+  name = "${var.environment.name}-blog"
   min_size = var.asg_min_size
   max_size = var.asg_max_size
 
@@ -61,7 +61,7 @@ module "blog_alb" {
 
   target_groups = [
     {
-      name_prefix      = "${var.enviornment.name}-"
+      name_prefix      = "${var.environment.name}-"
       backend_protocol = "HTTP"
       backend_port     = 80
       target_type      = "instance"
@@ -86,7 +86,7 @@ module "blog_sg" {
   version = "4.13.0"
 
   vpc_id  = module.blog_vpc.vpc_id
-  name    = "${var.enviornment.name}-blog"
+  name    = "${var.environment.name}-blog"
   ingress_rules = ["https-443-tcp","http-80-tcp"]
   ingress_cidr_blocks = ["0.0.0.0/0"]
   egress_rules = ["all-all"]
