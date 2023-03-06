@@ -30,7 +30,7 @@ module "blog_vpc" {
   }
 }
 
-module "autoscaling" {
+module "blog_autoscaling" {
   source  = "terraform-aws-modules/autoscaling/aws"
   version = "6.7.1"
   
@@ -45,6 +45,7 @@ module "autoscaling" {
   image_id               = data.aws_ami.app_ami.id
   instance_type          = var.instance_type
 }
+
 
 module "blog_alb" {
   source  = "terraform-aws-modules/alb/aws"
