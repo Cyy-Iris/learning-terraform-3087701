@@ -1,3 +1,3 @@
-module "dev" {
+module "qa" {
     source = "../modules/blog"
 }
